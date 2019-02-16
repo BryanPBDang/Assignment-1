@@ -152,17 +152,17 @@ inputStream.open(argv[1]);
 
         if(inputStream.good())
         {
-          double tempCount = 0;
-          double tempLength = 0;
+            double tempCount = 0;
+            double tempLength = 0;
 
-          while(getline(inputStream, line))
-          {
-                  tempCount++;
-                  tempLength = line.length();
-                  varSum += varNum(mean, tempLength);             //Adds a variance numerator
-          }
-          varLength = varSum / tempCount;                         //Sets the length variance value
-          inputStream.close();
+            while(getline(inputStream, line))
+            {
+                    tempCount++;
+                    tempLength = line.length();
+                    varSum += getVar(mean, tempLength);             //Adds a variance numerator
+            }
+            varLength = varSum / tempCount;                         //Sets the length variance value
+            inputStream.close();
         }
 
 
@@ -231,13 +231,29 @@ inputStream.open(argv[1]);
         int prbiCG = round(getPairProb(biCG, biCount)) + prbiCT;
         int prbiCC = round(getPairProb(biCC, biCount)) + prbiCG;
 
-        outputStream << prbiAA << " " << prbiAT << " " << prbiAG << " " << prbiAC << " " << prbiTA << " " << prbiTT << " " << prbiTG << " " << prbiTC << " " << prbiGA << " " << prbiGT << " " << prbiGG << " " << prbiGC << " " << prbiCA << " " << prbiCT << " " << prbiCG << " " << prbiCC << " " << endl;
+        outputStream << prbiAA <<
+        " " << prbiAT <<
+        " " << prbiAG <<
+        " " << prbiAC <<
+        " " << prbiTA <<
+        " " << prbiTT <<
+         " " << prbiTG <<
+         " " << prbiTC <<
+         " " << prbiGA <<
+         " " << prbiGT <<
+         " " << prbiGG <<
+         " " << prbiGC <<
+         " " << prbiCA <<
+         " " << prbiCT <<
+         " " << prbiCG <<
+         " " << prbiCC <<
+         " " << endl;
 
 
 //Print out random ATCG
-        for(int i = 0; i < 1000 ; ++i)
+        for(int i = 0; i < 1000 ; ++i) //for 1000
         {
-                int r = rand()%100 + 0;
+                int r = rand()%100 + 0; //random generator
                 char last = NULL;
                         if (r < prA && r >= 0)
                                 outputStream << "A";
@@ -352,4 +368,3 @@ inputStream.open(argv[1]);
   //inputFile.close();
   return 0;
   */
-}
