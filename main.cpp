@@ -52,22 +52,24 @@ int main(int argc, char **argv)
   double nucC = 0; // Count Nucleotide C
 
   double biCount = 0; //Count total binucleotides
-  double biAA = 0;
-  double biAT = 0;
-  double biAG = 0;
-  double biAC = 0;
-  double biTA = 0;
-  double biTT = 0;
-  double biTG = 0;
-  double biTC = 0;
   double biGA = 0;
   double biGT = 0;
   double biGG = 0;
   double biGC = 0;
+  double biAA = 0;
+  double biAT = 0;
+  double biAG = 0;
+  double biAC = 0
   double biCA = 0;
   double biCT = 0;
   double biCG = 0;
   double biCC = 0;
+  double biTA = 0;
+  double biTT = 0;
+  double biTG = 0;
+  double biTC = 0;
+
+
 
   string line;
 
@@ -194,14 +196,16 @@ inputStream.open(argv[1]);
         "\nTT: " << biTT*100/biCount <<
         "\nTG: " << biTG*100/biCount <<
         "\nTC: " << biTC*100/biCount <<
+        "\nCA: " << biCA*100/biCount <<
+        "\nCT: " << biCT*100/biCount <<
+        "\nCG: " << biCG*100/biCount <<
+        "\nCC: " << biCC*100/biCount <<
         "\nGA: " << biGA*100/biCount <<
         "\nGT: " << biGT*100/biCount <<
         "\nGG: " << biGG*100/biCount <<
         "\nGC: " << biGC*100/biCount <<
-        "\nCA: " << biCA*100/biCount <<
-        "\nCT: " << biCT*100/biCount <<
-        "\nCG: " << biCG*100/biCount <<
-        "\nCC: " << biCC*100/biCount << endl;
+
+        endl;
         outputStream.close();
         }
 
@@ -215,6 +219,14 @@ inputStream.open(argv[1]);
         int prC = round(getPairProb(countC, nucCount)) + prG;
 
         int prbiAA = round(getPairProb(biAA, biCount));
+        int prbiGG = round(getPairProb(biGG, biCount)) + prbiGT;
+        int prbiGC = round(getPairProb(biGC, biCount)) + prbiGG;
+        int prbiCA = round(getPairProb(biCA, biCount)) + prbiGC;
+        int prbiCT = round(getPairProb(biCT, biCount)) + prbiCA;
+        int prbiCG = round(getPairProb(biCG, biCount)) + prbiCT;
+        int prbiCC = round(getPairProb(biCC, biCount)) + prbiCG;
+        int prbiGA = round(getPairProb(biGA, biCount)) + prbiTC;
+        int prbiGT = round(getPairProb(biGT, biCount)) + prbiGA;
         int prbiAT = round(getPairProb(biAT, biCount)) + prbiAA;
         int prbiAG = round(getPairProb(biAG, biCount)) + prbiAT;
         int prbiAC = round(getPairProb(biAC, biCount)) + prbiAG;
@@ -222,31 +234,26 @@ inputStream.open(argv[1]);
         int prbiTT = round(getPairProb(biTT, biCount)) + prbiTA;
         int prbiTG = round(getPairProb(biTG, biCount)) + prbiTT;
         int prbiTC = round(getPairProb(biTC, biCount)) + prbiTG;
-        int prbiGA = round(getPairProb(biGA, biCount)) + prbiTC;
-        int prbiGT = round(getPairProb(biGT, biCount)) + prbiGA;
-        int prbiGG = round(getPairProb(biGG, biCount)) + prbiGT;
-        int prbiGC = round(getPairProb(biGC, biCount)) + prbiGG;
-        int prbiCA = round(getPairProb(biCA, biCount)) + prbiGC;
-        int prbiCT = round(getPairProb(biCT, biCount)) + prbiCA;
-        int prbiCG = round(getPairProb(biCG, biCount)) + prbiCT;
-        int prbiCC = round(getPairProb(biCC, biCount)) + prbiCG;
+
+
+
 
         outputStream << prbiAA <<
         " " << prbiAT <<
-        " " << prbiAG <<
         " " << prbiAC <<
         " " << prbiTA <<
         " " << prbiTT <<
-         " " << prbiTG <<
-         " " << prbiTC <<
-         " " << prbiGA <<
+        " " << prbiAG <<
+         " " << prbiCC <<
          " " << prbiGT <<
          " " << prbiGG <<
          " " << prbiGC <<
+         " " << prbiTG <<
+         " " << prbiTC <<
+         " " << prbiGA <<
          " " << prbiCA <<
          " " << prbiCT <<
          " " << prbiCG <<
-         " " << prbiCC <<
          " " << endl;
 
 
@@ -269,13 +276,13 @@ inputStream.open(argv[1]);
                                 outputStream << "A";
                                 last = 'A';
                         }
-                        else if(prbiAA <= r && r < prbiAT){
-                                outputStream << "T";
-                                last = 'T';
-                        }
-                        else if(prbiAT <= r && r < prbiAG){
+                        else if(prbiCT <= r && r < prbiCG){
                                 outputStream << "G";
                                 last = 'G';
+                        }
+                        else if(prbiCG <= r && r < 100){
+                                outputStream << "C";
+                                last = 'C';
                         }
                         else if(prbiAG <= r && r < prbiAC){
                                 outputStream << "C";
@@ -285,6 +292,19 @@ inputStream.open(argv[1]);
                                 outputStream << "A";
                                 last = 'A';
                         }
+                        else if(prbiAT <= r && r < prbiAG){
+                                outputStream << "G";
+                                last = 'G';
+                        }
+                        else if(prbiGG <= r && r < prbiGC){
+                                outputStream << "C";
+                                last = 'C';
+                        }
+                        else if(prbiAA <= r && r < prbiAT){
+                                outputStream << "T";
+                                last = 'T';
+                        }
+
                         else if(prbiTA <= r && r < prbiTT){
                                 outputStream << "T";
                                 last = 'T';
@@ -305,30 +325,21 @@ inputStream.open(argv[1]);
                                 outputStream << "T";
                                 last = 'T';
                         }
-                        else if(prbiGT <= r && r < prbiGG){
-                                outputStream << "G";
-                                last = 'G';
-                        }
-                        else if(prbiGG <= r && r < prbiGC){
-                                outputStream << "C";
-                                last = 'C';
-                        }
+
                         else if(prbiGC <= r && r < prbiCA){
                                 outputStream << "A";
                                 last = 'A';
                         }
-                        else if(prbiCA <= r && r < prbiCT){
+                        else if(prbiCA <= r && r < prbiCT)
+                        {
                                 outputStream << "T";
                                 last = 'T';
                         }
-                        else if(prbiCT <= r && r < prbiCG){
+                        else if(prbiGT <= r && r < prbiGG){
                                 outputStream << "G";
                                 last = 'G';
                         }
-                        else if(prbiCG <= r && r < 100){
-                                outputStream << "C";
-                                last = 'C';
-                        }
+
                         if(last == 'A')
                                 r = rand()%prA + 0;
                         else if(last == 'T')
